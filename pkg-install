@@ -37,7 +37,7 @@ __pkg_uninstall_pkg()
   printf "Uninstalling ${_package} "
   while read _file
   do
-    if ! pkgutil --file-info "${_file}" | grep "^pkgid: " | grep -v "${_package}" >/dev/null
+    if [ -f "${_file}" ] && ! pkgutil --file-info "${_file}" | grep "^pkgid: " | grep -v "${_package}" >/dev/null
     then
       rm -rf "${_file}" && printf "." || {
         printf "E"
@@ -100,7 +100,7 @@ __pkg_install_self()
     }
     cd "${_path}"
 
-    curl -L https://github.com/mpapis/pkg_uninstaller/tarball/master -o package.tgz || {
+    curl -L https://github.com/ciaranchen/pkg_uninstaller/tarball/master -o package.tgz || {
       printf "Can not download package.\n"
       return 2
     }
@@ -109,13 +109,16 @@ __pkg_install_self()
       printf "Can not extract package.\n"
       return 3
     }
-    mv mpapis-pkg_uninstaller-*/* .
-    rm -rf package.tgz mpapis-pkg_uninstaller-*
+    mv ciaranchen-pkg_uninstaller-*/* .
+    rm -rf package.tgz ciaranchen-pkg_uninstaller-*
 
     printf "Thank you for using pkg_uninstaller.\n"
     [[ ":$PATH:" =~ ":${_path}:" ]] ||
       printf "Now add ${_path} to your PATH.\n"
     printf " ~Michal\n"
+
+    printf "check file exists before uninstall.\n"
+    printf " ~Ciaran\n"
   )
 }
 
